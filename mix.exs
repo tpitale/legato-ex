@@ -2,7 +2,7 @@ defmodule Legato.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :legato_ex,
+    [app: :legato,
      version: "0.1.0",
      elixir: "~> 1.3",
      build_embedded: Mix.env == :prod,

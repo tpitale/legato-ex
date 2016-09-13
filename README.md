@@ -6,11 +6,11 @@
 
 If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
 
-  1. Add `legato_ex` to your list of dependencies in `mix.exs`:
+  1. Add `legato` to your list of dependencies in `mix.exs`:
 
     ```elixir
     def deps do
-      [{:legato_ex, "~> 0.1.0"}]
+      [{:legato, "~> 0.1.0"}]
     end
     ```
 
@@ -18,7 +18,6 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
 
     ```elixir
     def application do
-      [applications: [:legato_ex]]
+      [applications: [:legato]]
     end
     ```
-
