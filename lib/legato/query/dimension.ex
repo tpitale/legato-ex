@@ -11,7 +11,7 @@ defmodule Legato.Query.Dimension do
   end
 
   defp build(name) do
-    %{name: name}
+    %{name: Legato.add_prefix(name)}
   end
 
   defp uniq_by_name(dimensions) do

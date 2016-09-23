@@ -9,9 +9,9 @@ defmodule Legato.Query do
       Poison.Encoder.Map.encode(%{
         reportRequests: [
           %{
-            viewId: struct.view_id,
-            metrics: Legato.add_prefix(struct.metrics),
-            dimensions: Legato.add_prefix(struct.dimensions)
+            view_id: to_string(struct.view_id),
+            metrics: struct.metrics,
+            dimensions: struct.dimensions
           }
         ]
       }, options)

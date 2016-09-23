@@ -13,7 +13,7 @@ defmodule Legato.Query.Metric do
   end
 
   defp build(name) do
-    %{expression: name}
+    %{expression: Legato.add_prefix(name)}
   end
 
   defp uniq_by_name(metrics) do
