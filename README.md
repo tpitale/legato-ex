@@ -22,24 +22,26 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
     end
     ```
 
-```elixir
-profile = %User{access_token: access_token} |> Profile.all |> Enum.first
-report = %Report{dimensions: [], metrics: []}
-
-import Legato::Query
-```
-
-Get an oauth access token
+Get an oauth access token from Google
 
 "Authorization: Bearer token_here"
 
 HTTPoison.post "https://analyticsreporting.googleapis.com/v4/reports:batchGet", "{}", [{"Authorization", "Bearer token_here"}]
 
-1. Collect data into Query struct
-2. Convert query into ReportRequest JSON, encode with Poison
-3. Send request to GA
-4. Decode response
-5. Parse data into Report struct
+* [x] Collect data into Query struct
+* [x] Convert query into Request JSON, encode with Poison
+* [x] Send request to GA
+* [x] Decode response
+* [x] Parse data into struct
+* [ ] support metric expression strings
+* [ ] add filters to Query
+* [ ] add date ranges to Query
+* [ ] add segments to Query
+* [ ] put report struct into named struct
+
+```elixir
+profile = %Legato.Profile{access_token: oauth2_access_token, view_id: view_id}
+```
 
 ```elixir
 defmodule ExitReport do
