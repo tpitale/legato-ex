@@ -33,7 +33,7 @@ HTTPoison.post "https://analyticsreporting.googleapis.com/v4/reports:batchGet", 
 * [x] Send request to GA
 * [x] Decode response
 * [x] Parse data into struct
-* [ ] support metric expression strings
+* [x] support metric expression strings
 * [ ] add filters to Query
 * [ ] add date ranges to Query
 * [ ] add segments to Query

@@ -2,6 +2,25 @@ defmodule Legato.Query.Dimension do
   @derive [Poison.Encoder]
   defstruct name: nil
 
+  @doc ~S"""
+  Adds names to a list
+
+  ## Examples
+
+    iex> Legato.Query.Dimension.add([], [:country])
+    [%Legato.Query.Dimension{name: "ga:country"}]
+
+    iex> Legato.Query.Dimension.add([], [:country, :city])
+    [%Legato.Query.Dimension{name: "ga:country"}, %Legato.Query.Dimension{name: "ga:city"}]
+
+    iex> Legato.Query.Dimension.add([], [:country, :country])
+    [%Legato.Query.Dimension{name: "ga:country"}]
+
+    iex> Legato.Query.Dimension.add([], ["ga:country"])
+    [%Legato.Query.Dimension{name: "ga:country"}]
+
+  """
+
   def add(dimensions, names) do
     uniq_by_name(dimensions ++ build(names))
   end
@@ -10,8 +29,12 @@ defmodule Legato.Query.Dimension do
     Enum.map(names, fn(name) -> build(name) end)
   end
 
+  defp build(name) when is_atom(name) do
+    build(Legato.add_prefix(name))
+  end
+
   defp build(name) do
-    %{name: Legato.add_prefix(name)}
+    %__MODULE__{name: name}
   end
 
   defp uniq_by_name(dimensions) do
