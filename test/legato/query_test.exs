@@ -1,5 +1,6 @@
 defmodule Legato.QueryTest do
   use ExUnit.Case
+  doctest Legato.Query
 
   # test "add metrics to query" do
   #   query = %Legato.Query{}

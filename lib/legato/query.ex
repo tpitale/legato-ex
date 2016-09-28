@@ -26,18 +26,86 @@ defmodule Legato.Query do
 
   # TODO: metric list module?
 
+  @doc ~S"""
+  Start a query with a given Legato.Profile and metrics
+
+  ## Examples
+
+    iex> %Legato.Profile{access_token: "abcde", view_id: 177817} |> Legato.Query.metrics([:pageviews])
+    %Legato.Query{
+      profile: %Legato.Profile{access_token: "abcde", view_id: 177817},
+      view_id: 177817,
+      metrics: [%Legato.Query.Metric{expression: "ga:pageviews"}],
+      dimensions: [],
+      filters: [],
+      segments: [],
+      date_ranges: []
+    }
+
+  """
   def metrics(%Profile{} = profile, names) do
     %__MODULE__{profile: profile, view_id: profile.view_id} |> metrics(names)
   end
 
+  @doc ~S"""
+  Add metrics to an existing Legato.Query
+
+  ## Examples
+
+    iex> %Legato.Query{} |> Legato.Query.metrics([:pageviews]) |> Legato.Query.metrics([:exits])
+    %Legato.Query{
+      profile: nil,
+      view_id: nil,
+      metrics: [%Legato.Query.Metric{expression: "ga:pageviews"}, %Legato.Query.Metric{expression: "ga:exits"}],
+      dimensions: [],
+      filters: [],
+      segments: [],
+      date_ranges: []
+    }
+
+  """
   def metrics(%__MODULE__{} = query, names) do
     %{query | metrics: Metric.add(query.metrics, names)}
   end
 
+  @doc ~S"""
+  Start a query with a given Legato.Profile and dimensions
+
+  ## Examples
+
+    iex> %Legato.Profile{access_token: "abcde", view_id: 177817} |> Legato.Query.dimensions([:country])
+    %Legato.Query{
+      profile: %Legato.Profile{access_token: "abcde", view_id: 177817},
+      view_id: 177817,
+      metrics: [],
+      dimensions: [%Legato.Query.Dimension{name: "ga:country"}],
+      filters: [],
+      segments: [],
+      date_ranges: []
+    }
+
+  """
   def dimensions(%Profile{} = profile, names) do
     %__MODULE__{profile: profile, view_id: profile.view_id} |> dimensions(names)
   end
 
+  @doc ~S"""
+  Add dimensions to an existing Legato.Query
+
+  ## Examples
+
+    iex> %Legato.Query{} |> Legato.Query.dimensions([:country]) |> Legato.Query.dimensions([:city])
+    %Legato.Query{
+      profile: nil,
+      view_id: nil,
+      metrics: [],
+      dimensions: [%Legato.Query.Dimension{name: "ga:country"}, %Legato.Query.Dimension{name: "ga:city"}],
+      filters: [],
+      segments: [],
+      date_ranges: []
+    }
+
+  """
   def dimensions(%__MODULE__{} = query, names) do
     %{query | dimensions: Dimension.add(query.dimensions, names)}
   end
