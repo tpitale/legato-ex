@@ -35,11 +35,7 @@ defmodule Legato.Query do
     %Legato.Query{
       profile: %Legato.Profile{access_token: "abcde", view_id: 177817},
       view_id: 177817,
-      metrics: [%Legato.Query.Metric{expression: "ga:pageviews"}],
-      dimensions: [],
-      filters: [],
-      segments: [],
-      date_ranges: []
+      metrics: [%Legato.Query.Metric{expression: "ga:pageviews"}]
     }
 
   """
@@ -54,13 +50,7 @@ defmodule Legato.Query do
 
     iex> %Legato.Query{} |> Legato.Query.metrics([:pageviews]) |> Legato.Query.metrics([:exits])
     %Legato.Query{
-      profile: nil,
-      view_id: nil,
-      metrics: [%Legato.Query.Metric{expression: "ga:pageviews"}, %Legato.Query.Metric{expression: "ga:exits"}],
-      dimensions: [],
-      filters: [],
-      segments: [],
-      date_ranges: []
+      metrics: [%Legato.Query.Metric{expression: "ga:pageviews"}, %Legato.Query.Metric{expression: "ga:exits"}]
     }
 
   """
@@ -77,11 +67,7 @@ defmodule Legato.Query do
     %Legato.Query{
       profile: %Legato.Profile{access_token: "abcde", view_id: 177817},
       view_id: 177817,
-      metrics: [],
-      dimensions: [%Legato.Query.Dimension{name: "ga:country"}],
-      filters: [],
-      segments: [],
-      date_ranges: []
+      dimensions: [%Legato.Query.Dimension{name: "ga:country"}]
     }
 
   """
@@ -96,13 +82,7 @@ defmodule Legato.Query do
 
     iex> %Legato.Query{} |> Legato.Query.dimensions([:country]) |> Legato.Query.dimensions([:city])
     %Legato.Query{
-      profile: nil,
-      view_id: nil,
-      metrics: [],
-      dimensions: [%Legato.Query.Dimension{name: "ga:country"}, %Legato.Query.Dimension{name: "ga:city"}],
-      filters: [],
-      segments: [],
-      date_ranges: []
+      dimensions: [%Legato.Query.Dimension{name: "ga:country"}, %Legato.Query.Dimension{name: "ga:city"}]
     }
 
   """
