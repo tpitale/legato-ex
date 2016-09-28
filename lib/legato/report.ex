@@ -6,25 +6,20 @@ defmodule Legato.Report do
   def from_json(report) when is_map(report) do
     headers = headers_from_json(report["columnHeader"])
 
-    values_from_json(report["data"]["rows"]) |>
+    values_from_json(report) |>
       Enum.map(&map_row(headers, &1))
   end
 
-  defp headers_from_json(headers) do
-    # TODO: so much brittle JSON keys
-    headers["dimensions"] ++ Enum.map(headers["metricHeader"]["metricHeaderEntries"], &parse_metric_header(&1))
+  defp headers_from_json(%{"dimensions" => dimensions, "metricHeader" => %{"metricHeaderEntries" => metrics}}) do
+    dimensions ++ Enum.map(metrics, fn(m) -> m["name"] end)
   end
 
-  defp parse_metric_header(header) do
-    header["name"]
-  end
-
-  defp values_from_json(rows) do
+  defp values_from_json(%{"data" => %{"rows" => rows}}) do
     Enum.map(rows, &values_from_row(&1))
   end
 
-  defp values_from_row(row) do
-    row["dimensions"] ++ Enum.flat_map(row["metrics"], fn(m) -> m["values"] end)
+  defp values_from_row(%{"dimensions" => dimensions, "metrics" => metrics}) do
+    dimensions ++ Enum.flat_map(metrics, fn(m) -> m["values"] end)
   end
 
   defp map_row(headers, values) do
