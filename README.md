@@ -14,7 +14,7 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
     end
     ```
 
-  2. Ensure `legato_ex` is started before your application:
+  2. Ensure `legato` is started before your application:
 
     ```elixir
     def application do
