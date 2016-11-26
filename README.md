@@ -1,6 +1,6 @@
 # Legato
 
-**TODO: Add description**
+Legato provides query access through the official [Google Analytics Reporting API v4](https://developers.google.com/analytics/devguides/reporting/core/v4/)
 
 ## Installation
 
