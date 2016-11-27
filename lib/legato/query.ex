@@ -1,5 +1,14 @@
 defmodule Legato.Query do
-  defstruct profile: nil, view_id: nil, metrics: [], dimensions: [], filters: [], segments: [], date_ranges: []
+  defstruct profile: nil,
+            view_id: nil,
+            metrics: [],
+            dimensions: [],
+            filters: %{
+              metrics: %Legato.Query.FilterSet{},
+              dimensions: %Legato.Query.FilterSet{}
+            },
+            segments: [],
+            date_ranges: []
 
   defimpl Poison.Encoder, for: __MODULE__ do
     def encode(struct, options) do
@@ -20,7 +29,20 @@ defmodule Legato.Query do
 
   alias Legato.Profile
   alias Legato.Query.Metric
+  alias Legato.Query.MetricFilter
   alias Legato.Query.Dimension
+  alias Legato.Query.DimensionFilter
+  alias Legato.Query.FilterSet
+
+  # @behaviour Access
+  # def fetch(t, key) do
+  # end
+  # def get(t, key, value) do
+  # end
+  # def get_and_update(t, key, list) do
+  # end
+  # def pop(t, key) do
+  # end
 
   # TODO: metrics, dimensions calls that start with a profile
 
@@ -90,13 +112,38 @@ defmodule Legato.Query do
     %{query | dimensions: Dimension.add(query.dimensions, names)}
   end
 
-  # TODO: struct for filter
+  def filter(query, :metrics, %MetricFilter{} = filter) do
+    update_in(query.filters.metrics, &FilterSet.add(&1, filter))
+  end
 
-  # def filter(query, :metrics, expr) do
-  # end
+  def filter(query, :dimensions, %DimensionFilter{} = filter) do
+    update_in(query.filters.dimensions, &FilterSet.add(&1, filter))
+  end
 
-  # def filter(query, :dimensions, expr) do
-  # end
+  @doc ~S"""
+  Add filter with default operator
+
+  ## Examples
+
+    iex> %Legato.Query{} |> Legato.Query.filter(:metrics, :pageviews)
+  """
+  def filter(query, as, name) do
+    filter(query, as, name, nil)
+  end
+
+  def filter(query, :metrics, name, operator) do
+    filter(query, :metrics, %MetricFilter{
+      metric_name: name,
+      operator: (operator || :equal)
+    })
+  end
+
+  def filter(query, :dimensions, name, operator) do
+    filter(query, :dimensions, %DimensionFilter{
+      dimension_name: name,
+      operator: (operator || :regexp)
+    })
+  end
 
   # TODO: date_range
   # TODO: add_date_range

@@ -58,7 +58,7 @@ alias Legato.Report
 profile |>
   metrics([:exits, :pageviews]) |>
   dimensions([:country]) |>
-  filter(:exits, :gt, 10) |>
+  filter(:metrics, :exits, :gt, 10) |>
   between(start_date, end_date) |>
 Request.all |>
 Report.as(ExitReport)
