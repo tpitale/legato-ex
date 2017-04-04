@@ -3,12 +3,13 @@ defmodule Legato.Query do
             view_id: nil,
             metrics: [],
             dimensions: [],
+            date_ranges: [],
+            order_bys: [],
             filters: %{
-              metrics: %Legato.Query.FilterSet{},
-              dimensions: %Legato.Query.FilterSet{}
+              metrics: %Legato.Query.FilterSet{as: :metrics},
+              dimensions: %Legato.Query.FilterSet{as: :dimensions}
             },
-            segments: [],
-            date_ranges: []
+            segments: []
 
   defimpl Poison.Encoder, for: __MODULE__ do
     def encode(struct, options) do
@@ -19,19 +20,15 @@ defmodule Legato.Query do
         reportRequests: [
           %{
             view_id: to_string(struct.view_id),
-            metrics: list_to_maps(struct.metrics, :expression, options),
-            dimensions: list_to_maps(struct.dimensions, :name, options)
+            metrics: list_to_maps(:expression, struct.metrics, options),
+            dimensions: list_to_maps(:name, struct.dimensions, options)
           }
         ]
       }, options)
     end
 
-    def list_to_maps(expressions, key, options) do
-      Enum.map(expressions, fn(expression) -> Poison.Encoder.Map.encode(%{key => to_ga_string(expression)}, options) end)
-    end
-
-    def to_ga_string(s) do
-      "ga:#{s}"
+    def list_to_maps(key, values, options) do
+      Enum.map(values, &Poison.Encoder.Map.encode(%{key => Legato.add_prefix(&1)}, options))
     end
   end
 
@@ -41,16 +38,6 @@ defmodule Legato.Query do
   alias Legato.Query.Dimension
   alias Legato.Query.DimensionFilter
   alias Legato.Query.FilterSet
-
-  # @behaviour Access
-  # def fetch(t, key) do
-  # end
-  # def get(t, key, value) do
-  # end
-  # def get_and_update(t, key, list) do
-  # end
-  # def pop(t, key) do
-  # end
 
   # TODO: Fetch this list from metadata api v3
   # https://developers.google.com/analytics/devguides/reporting/metadata/v3/
@@ -744,8 +731,8 @@ defmodule Legato.Query do
     iex> %Legato.Query{} |> Legato.Query.filter(:pageviews, :gt, 10)
     %Legato.Query{
       filters: %{
-        dimensions: %Legato.Query.FilterSet{},
-        metrics: %Legato.Query.FilterSet{operator: :or, filters: [
+        dimensions: %Legato.Query.FilterSet{as: :dimensions},
+        metrics: %Legato.Query.FilterSet{as: :metrics, operator: :or, filters: [
           %Legato.Query.MetricFilter{
             metric_name: :pageviews,
             not: false,
@@ -759,8 +746,8 @@ defmodule Legato.Query do
     iex> %Legato.Query{} |> Legato.Query.filter(:continent, :like, ["North America", "Europe"])
     %Legato.Query{
       filters: %{
-        metrics: %Legato.Query.FilterSet{},
-        dimensions: %Legato.Query.FilterSet{operator: :or, filters: [
+        metrics: %Legato.Query.FilterSet{as: :metrics},
+        dimensions: %Legato.Query.FilterSet{as: :dimensions, operator: :or, filters: [
           %Legato.Query.DimensionFilter{
             dimension_name: :continent,
             not: false,
@@ -802,6 +789,8 @@ defmodule Legato.Query do
   # TODO: add_date_range
 
   # TODO: validate presence of profile, view_id, metrics, dimensions
+
+  # TODO: order_by(s)
 
   def to_json(query), do: Poison.encode!(query)
 end
