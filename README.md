@@ -36,7 +36,8 @@ HTTPoison.post "https://analyticsreporting.googleapis.com/v4/reports:batchGet", 
 * [x] support metric expression strings
 * [x] add filters to Query
 * [x] add date ranges to Query
-* [ ] add order by to Query
+* [x] add order by to Query
+* [ ] add segment_id to Query
 * [ ] add Sampling
 * [ ] put report struct into named struct
 * [ ] add segments to Query (long goal)
@@ -63,6 +64,7 @@ profile |>
   filter(:exits, :gt, 10) |>
   between(start_date, end_date) |> # first date range for the query
   between(another_start_date, another_end_date) |> # adds subsequent date ranges
+  order_by(:pageviews, :descending) |>
 Request.all |>
 Report.as(ExitReport)
 ```

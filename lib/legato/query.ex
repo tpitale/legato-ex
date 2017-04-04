@@ -9,6 +9,7 @@ defmodule Legato.Query do
               metrics: %Legato.Query.FilterSet{as: :metrics},
               dimensions: %Legato.Query.FilterSet{as: :dimensions}
             },
+            segment_id: nil,
             segments: []
 
   defimpl Poison.Encoder, for: __MODULE__ do
@@ -20,8 +21,11 @@ defmodule Legato.Query do
         reportRequests: [
           %{
             view_id: to_string(struct.view_id),
-            metrics: struct.metrics, # derived
-            dimensions: struct.dimensions # derived
+            # these are derived:
+            metrics: struct.metrics,
+            dimensions: struct.dimensions,
+            date_ranges: struct.date_ranges,
+            order_bys: struct.order_bys
           }
         ]
       }, options)
@@ -30,6 +34,7 @@ defmodule Legato.Query do
 
   alias Legato.Profile
   alias Legato.Query.DateRange
+  alias Legato.Query.Order
   alias Legato.Query.Metric
   alias Legato.Query.MetricFilter
   alias Legato.Query.Dimension
@@ -786,9 +791,15 @@ defmodule Legato.Query do
     %{query | date_ranges: DateRange.add(query.date_ranges, start_date, end_date)}
   end
 
-  # TODO: validate presence of profile, view_id, metrics, dimensions
+  def order_by(query, name, direction \\ :ascending) when is_atom(name) do
+    %{query | order_bys: query.order_bys ++ [%Order{field_name: name, sort_order: direction}]}
+  end
 
-  # TODO: order_by(s)
+  def order_by(query, %Order{} = value) do
+    %{query | order_bys: query.order_bys ++ [value]}
+  end
+
+  # TODO: validate presence of profile, view_id, metrics, dimensions
 
   def to_json(query), do: Poison.encode!(query)
 end
