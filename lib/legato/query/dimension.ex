@@ -1,6 +1,6 @@
 defmodule Legato.Query.Dimension do
   @derive [Poison.Encoder]
-  defstruct name: nil
+  defstruct name: nil, histogram_buckets: []
 
   @doc ~S"""
   Adds names to a list
@@ -31,6 +31,10 @@ defmodule Legato.Query.Dimension do
 
   defp build(name) when is_atom(name) do
     build(Legato.add_prefix(name))
+  end
+
+  defp build(%__MODULE__{} = dimension) do
+    dimension
   end
 
   defp build(name) do

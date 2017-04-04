@@ -20,19 +20,16 @@ defmodule Legato.Query do
         reportRequests: [
           %{
             view_id: to_string(struct.view_id),
-            metrics: list_to_maps(:expression, struct.metrics, options),
-            dimensions: list_to_maps(:name, struct.dimensions, options)
+            metrics: struct.metrics, # derived
+            dimensions: struct.dimensions # derived
           }
         ]
       }, options)
     end
-
-    def list_to_maps(key, values, options) do
-      Enum.map(values, &Poison.Encoder.Map.encode(%{key => Legato.add_prefix(&1)}, options))
-    end
   end
 
   alias Legato.Profile
+  alias Legato.Query.DateRange
   alias Legato.Query.Metric
   alias Legato.Query.MetricFilter
   alias Legato.Query.Dimension
@@ -784,9 +781,10 @@ defmodule Legato.Query do
     update_in(query.filters.dimensions, &FilterSet.add(&1, filter))
   end
 
-  # TODO: between
-  # TODO: date_range
-  # TODO: add_date_range
+  # add to existing date ranges
+  def between(query, start_date, end_date) do
+    %{query | date_ranges: DateRange.add(query.date_ranges, start_date, end_date)}
+  end
 
   # TODO: validate presence of profile, view_id, metrics, dimensions
 

@@ -34,10 +34,12 @@ HTTPoison.post "https://analyticsreporting.googleapis.com/v4/reports:batchGet", 
 * [x] Decode response
 * [x] Parse data into struct
 * [x] support metric expression strings
-* [ ] add filters to Query
-* [ ] add date ranges to Query
-* [ ] add segments to Query
+* [x] add filters to Query
+* [x] add date ranges to Query
+* [ ] add order by to Query
+* [ ] add Sampling
 * [ ] put report struct into named struct
+* [ ] add segments to Query (long goal)
 
 ```elixir
 profile = %Legato.Profile{access_token: oauth2_access_token, view_id: view_id}
@@ -59,7 +61,10 @@ profile |>
   metrics([:exits, :pageviews]) |>
   dimensions([:country]) |>
   filter(:exits, :gt, 10) |>
-  between(start_date, end_date) |>
+  between(start_date, end_date) |> # first date range for the query
+  between(another_start_date, another_end_date) |> # adds subsequent date ranges
 Request.all |>
 Report.as(ExitReport)
 ```
+
+If you'd like to use relative dates, I suggest trying `timex`.
