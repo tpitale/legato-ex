@@ -25,7 +25,6 @@ defmodule Legato.Query.FilterSet do
   """
   def add(set, filter) do
     update_in(set.filters, &[filter | &1])
-    # %{set | filters: [filter | set.filters]}
   end
 
   @doc ~S"""
