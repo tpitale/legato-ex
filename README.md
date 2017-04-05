@@ -39,7 +39,7 @@ HTTPoison.post "https://analyticsreporting.googleapis.com/v4/reports:batchGet", 
 * [x] add order by to Query
 * [ ] add segment_id to Query
 * [ ] add Sampling
-* [ ] put report struct into named struct
+* [x] put report struct into named struct
 * [ ] add segments to Query (long goal)
 
 ```elixir
