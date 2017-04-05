@@ -66,6 +66,7 @@ profile |>
   between(another_start_date, another_end_date) |> # adds subsequent date ranges
   order_by(:pageviews, :descending) |>
   segment(-3) |>
+  sampling(:small) |>
 Request.all |>
 Report.as(ExitReport)
 ```
