@@ -37,7 +37,7 @@ HTTPoison.post "https://analyticsreporting.googleapis.com/v4/reports:batchGet", 
 * [x] add filters to Query
 * [x] add date ranges to Query
 * [x] add order by to Query
-* [ ] add segment_id to Query
+* [x] add segment_id to Query
 * [ ] add Sampling
 * [x] put report struct into named struct
 * [ ] add segments to Query (long goal)
@@ -65,8 +65,10 @@ profile |>
   between(start_date, end_date) |> # first date range for the query
   between(another_start_date, another_end_date) |> # adds subsequent date ranges
   order_by(:pageviews, :descending) |>
+  segment(-3) |>
 Request.all |>
 Report.as(ExitReport)
 ```
 
 If you'd like to use relative dates, I suggest trying `timex`.
+`segment` with an integer will clear any segments, cannot be mixed with dynamic segments.

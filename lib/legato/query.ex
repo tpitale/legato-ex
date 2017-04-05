@@ -1,22 +1,13 @@
 defmodule Legato.Query do
-  defstruct profile: nil,
-            view_id: nil,
-            metrics: [],
-            dimensions: [],
-            date_ranges: [],
-            order_bys: [],
-            filters: %{
-              metrics: %Legato.Query.FilterSet{as: :metrics},
-              dimensions: %Legato.Query.FilterSet{as: :dimensions}
-            },
-            segment_id: nil,
-            segments: []
+  defstruct profile: nil, view_id: nil, metrics: [], dimensions: [],
+    date_ranges: [], order_bys: [], segments: [], filters: %{
+      metrics: %Legato.Query.FilterSet{as: :metrics},
+      dimensions: %Legato.Query.FilterSet{as: :dimensions}
+    }
 
   defimpl Poison.Encoder, for: __MODULE__ do
     def encode(struct, options) do
-
       # This is the format for GA report json
-      # TODO: move into ReportRequest?
       Poison.Encoder.Map.encode(%{
         reportRequests: [
           %{
@@ -35,6 +26,7 @@ defmodule Legato.Query do
   alias Legato.Profile
   alias Legato.Query.DateRange
   alias Legato.Query.Order
+  alias Legato.Query.Segment
   alias Legato.Query.Metric
   alias Legato.Query.MetricFilter
   alias Legato.Query.Dimension
@@ -797,6 +789,19 @@ defmodule Legato.Query do
 
   def order_by(query, name, direction \\ :ascending) when is_atom(name) do
     %{query | order_bys: query.order_bys ++ [%Order{field_name: name, sort_order: direction}]}
+  end
+
+  @doc ~S"""
+  Adds a single segment id
+
+  ## Examples
+
+    iex> %Legato.Query{} |> Legato.Query.segment(-3)
+    %Legato.Query{segments: [%Legato.Query.Segment{segment_id: "gaid:-3"}]}
+
+  """
+  def segment(query, id) when is_integer(id) do
+    %{query | segments: [Segment.build(id)]}
   end
 
   # TODO: validate presence of profile, view_id, metrics, dimensions

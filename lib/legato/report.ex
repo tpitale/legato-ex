@@ -28,18 +28,6 @@ defmodule Legato.Report do
 
   @doc ~S"""
   Convert plain map into named struct module
-
-  ## Examples
-
-    iex> defmodule ExitReport do
-    ...>   defstruct exits: 0, pageviews: 0
-    ...> end
-    iex> [%{exits: 18, pageviews: 90}, %{pageviews: 10}] |> Legato.Report.as(ExitReport)
-    [
-      %ExitReport{exits: 18, pageviews: 90},
-      %ExitReport{exits: 0, pageviews: 10}
-    ]
-
   """
   def as(data, report_module) do
     Enum.map(data, &struct(report_module, &1))
