@@ -1,6 +1,7 @@
 defmodule Legato.Query do
-  defstruct profile: nil, view_id: nil, metrics: [], dimensions: [],
-    date_ranges: [], order_bys: [], segments: [], filters: %{
+  defstruct profile: nil, view_id: nil, sampling_level: :default,
+    metrics: [], dimensions: [], date_ranges: [], order_bys: [], segments: [],
+    filters: %{
       metrics: %Legato.Query.FilterSet{as: :metrics},
       dimensions: %Legato.Query.FilterSet{as: :dimensions}
     }
@@ -16,7 +17,9 @@ defmodule Legato.Query do
             metrics: struct.metrics,
             dimensions: struct.dimensions,
             date_ranges: struct.date_ranges,
-            order_bys: struct.order_bys
+            order_bys: struct.order_bys,
+            segments: struct.segments,
+            sampling_level: struct.sampling_level
           }
         ]
       }, options)
@@ -802,6 +805,11 @@ defmodule Legato.Query do
   """
   def segment(query, id) when is_integer(id) do
     %{query | segments: [Segment.build(id)]}
+  end
+
+  # :default, :small, :large
+  def sampling(query, level) do
+    %{query | sampling_level: level}
   end
 
   # TODO: validate presence of profile, view_id, metrics, dimensions

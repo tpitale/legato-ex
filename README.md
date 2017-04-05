@@ -38,7 +38,7 @@ HTTPoison.post "https://analyticsreporting.googleapis.com/v4/reports:batchGet", 
 * [x] add date ranges to Query
 * [x] add order by to Query
 * [x] add segment_id to Query
-* [ ] add Sampling
+* [x] add Sampling
 * [x] put report struct into named struct
 * [ ] add segments to Query (long goal)
 
