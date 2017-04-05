@@ -791,12 +791,12 @@ defmodule Legato.Query do
     %{query | date_ranges: DateRange.add(query.date_ranges, start_date, end_date)}
   end
 
-  def order_by(query, name, direction \\ :ascending) when is_atom(name) do
-    %{query | order_bys: query.order_bys ++ [%Order{field_name: name, sort_order: direction}]}
-  end
-
   def order_by(query, %Order{} = value) do
     %{query | order_bys: query.order_bys ++ [value]}
+  end
+
+  def order_by(query, name, direction \\ :ascending) when is_atom(name) do
+    %{query | order_bys: query.order_bys ++ [%Order{field_name: name, sort_order: direction}]}
   end
 
   # TODO: validate presence of profile, view_id, metrics, dimensions
