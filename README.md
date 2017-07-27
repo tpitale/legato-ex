@@ -4,7 +4,7 @@ Legato provides query access through the official [Google Analytics Reporting AP
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
+[Available in Hex](https://hex.pm/packages/legato), the package can be installed as:
 
   1. Add `legato` to your list of dependencies in `mix.exs`:
 
